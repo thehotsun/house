@@ -124,6 +124,9 @@ function getDate(date, next = true, skip = true) {
 
  */
 
+ function () {
+  
+ }
 
 export {
   typeOf
