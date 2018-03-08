@@ -5,5 +5,5 @@ function temp (id, str) {
   console.log(str);
   eval(str)
   console.log(arr);
-  document.getElementById(id).innerHTML = arr.join()
+  document.getElementById(id).innerHTML = arr.join('')
 }
