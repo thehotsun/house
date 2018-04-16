@@ -118,18 +118,29 @@ function getDate(date, next = true, skip = true) {
   return year + month + today
 }
 
-/*
-
-
-
+/**
+ * 此函数接受一个开始时间，一个结束时间，以小时为基准，可接受小数，来判断当前日期是否在传入的时间区间内,且当前日期不能为周末
+ * @param start 开始时间, type: number
+ *        end 结束时间, type: number
+ * return true 或者 false
  */
 
- function () {
-  
- }
+function getNowDate(start = 9, end = 16) { // 接受两个参数，一个为开始时间，一个为结束时间，且都以小时为基准，可以传入小数
+  let date = new Date()
+  let detailDate = date.toString().slice(16, 21)
+  let regex = /:(\d+)/
+      detailDate = detailDate.replace(regex, (a, b) => {
+    return ('.' + (b / 60).toString().replace(/0./, ''))
+  })
+  if (detailDate >= start && detailDate <= end && date.getDay() !== 0 && date.getDay() !== 6) {
+    return true
+  } else {
+    return false
+  }
+}
 
 export {
-  typeOf
+  typeOf,
   quickSort,
   flatten,
   sortedIndex,

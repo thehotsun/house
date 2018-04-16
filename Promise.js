@@ -34,14 +34,23 @@ class Promise {
 
   resolvePromise (promise2, x, resolve, reject) {
     if (x instanceof Promise) {
-      // if (x.status === 'pending') {
-      //   x.then(y => {
-      //     return resolvePromise(x, y, resolve,reject)
-      //   })
-      // } else {
-      //   return x.then(resolve, reject)
-      // }
-      return x.then(resolve, reject)
+      if (x.status === 'pending') {
+        x.then(y => {
+          return resolvePromise(x, y, resolve,reject)
+        })
+      } else {
+        return x.then(resolve, reject)
+      }
+      // return x.then(resolve, reject)
+    } else if ((typeof x === 'function' || typeof x === 'object') && x) {
+      let then = x.then
+      if (typeof then === 'function') {
+        x.then(y => {
+          return resolvePromise(x, y, resolve,reject)
+        }, reason => {
+          reject(reason)
+        })
+      }
     } else {
       resolve(x)
     }
