@@ -1,7 +1,6 @@
-
 /*判断数据类型*/
 
-function typeOf (obj) {
+function typeOf(obj) {
   let toString = Object.prototype.toString
   return toString.call(obj).slice(8, -1)
 }
@@ -13,15 +12,15 @@ arr type：Array
 
 */
 
-function quickSort (arr) {
+function quickSort(arr) {
   for (var i = 1; i < arr.length; i++) {
     var target = arr[i]
     var index = undefined
     for (var j = i - 1; j >= 0; j--) {
-        if (target < arr[j]) index = j
-        else break
+      if (target < arr[j]) index = j
+      else break
     }
-    if (index != undefined)  {
+    if (index != undefined) {
       arr.splice(index, 0, arr[i])
       arr.splice(i + 1, 1)
     }
@@ -47,8 +46,12 @@ function flatten (arr) {
   return array
 }*/
 
-function flatten (arr) {
-  while (arr.some(item => {return typeOf(item) === 'Array'})) {
+function flatten(arr) {
+  while (
+    arr.some(item => {
+      return typeOf(item) === 'Array'
+    })
+  ) {
     arr = [].concat(...arr)
   }
   return arr
@@ -66,14 +69,15 @@ sortedIndex([1,3,4,6,7], 5) 返回的值为5在arr中应该占有的下标位置
  */
 
 function sortedIndex(arr, obj) {
-    var low = 0, high = arr.length;
-    while (high - 1 !== low) {
-      let mid = Math.floor((high + low) / 2)
-      if (obj > arr[mid]) low = mid
-      else high = mid
-    }
-    return high;
-};
+  var low = 0,
+    high = arr.length
+  while (high - 1 !== low) {
+    let mid = Math.floor((high + low) / 2)
+    if (obj > arr[mid]) low = mid
+    else high = mid
+  }
+  return high
+}
 
 /*
 
@@ -82,11 +86,11 @@ obj type: Object
 
  */
 
-function shen (obj) {
+function shen(obj) {
   let newObj = isAarray(obj) ? [] : {}
   for (let i in obj) {
     if (obj.hasOwnProperty(i)) {
-      newObj[i] = (typeof obj[i] == 'object') ? shen(obj[i]) : obj[i]
+      newObj[i] = typeof obj[i] == 'object' ? shen(obj[i]) : obj[i]
     }
   }
   return newObj
@@ -104,39 +108,70 @@ function shen (obj) {
 
 function getDate(date, next = true, skip = true) {
   let diff = next ? 1 : -1
-  var sj = new Date(date.slice(0, 4), date.slice(4, 6) - 1, date.slice(6) - diff)
+  var sj = new Date(
+    date.slice(0, 4),
+    date.slice(4, 6) - 1,
+    date.slice(6) - diff
+  )
   if (skip) {
     let day = sj.getDay()
-    if (day === 0 && skip) sj = new Date(date.slice(0, 4), date.slice(4, 6) - 1, date.slice(6)- diff - 2)
-    else if (day === 0 && !skip) sj = new Date(date.slice(0, 4), date.slice(4, 6) - 1, date.slice(6)- diff + 1)
-    else if (day === 6 && skip) sj = new Date(date.slice(0, 4), date.slice(4, 6) - 1, date.slice(6)- diff - 1)
-    else if (day === 6 && !skip) sj = new Date(date.slice(0, 4), date.slice(4, 6) - 1, date.slice(6)- diff + 2)
+    if (day === 0 && skip)
+      sj = new Date(
+        date.slice(0, 4),
+        date.slice(4, 6) - 1,
+        date.slice(6) - diff - 2
+      )
+    else if (day === 0 && !skip)
+      sj = new Date(
+        date.slice(0, 4),
+        date.slice(4, 6) - 1,
+        date.slice(6) - diff + 1
+      )
+    else if (day === 6 && skip)
+      sj = new Date(
+        date.slice(0, 4),
+        date.slice(4, 6) - 1,
+        date.slice(6) - diff - 1
+      )
+    else if (day === 6 && !skip)
+      sj = new Date(
+        date.slice(0, 4),
+        date.slice(4, 6) - 1,
+        date.slice(6) - diff + 2
+      )
   }
   let year = sj.getFullYear()
-  let month = sj.getMonth() + 1 < 10 ? '0' + (sj.getMonth() + 1) : sj.getMonth() + 1
+  let month =
+    sj.getMonth() + 1 < 10 ? '0' + (sj.getMonth() + 1) : sj.getMonth() + 1
   let today = sj.getDate() < 10 ? '0' + sj.getDate() : sj.getDate()
   return year + month + today
 }
 
 /**
- * 此函数接受一个开始时间，一个结束时间，以小时为基准，可接受小数，来判断当前日期是否在传入的时间区间内,且当前日期不能为周末
- * @param start 开始时间, type: number
- *        end 结束时间, type: number
- * return true 或者 false
+ * 获取查询参数
+ * @return {Object}
+ * @example
+ * http://www.gtja.net?stockCode=123456&stockName=股票名
+ * =》 {
+ *       stockCode: '123456',
+ *       stockName: '股票名'
+ *     }
  */
-
-function getNowDate(start = 9, end = 16) { // 接受两个参数，一个为开始时间，一个为结束时间，且都以小时为基准，可以传入小数
-  let date = new Date()
-  let detailDate = date.toString().slice(16, 21)
-  let regex = /:(\d+)/
-      detailDate = detailDate.replace(regex, (a, b) => {
-    return ('.' + (b / 60).toString().replace(/0./, ''))
-  })
-  if (detailDate >= start && detailDate <= end && date.getDay() !== 0 && date.getDay() !== 6) {
-    return true
-  } else {
-    return false
+function getRequests() {
+  var url = location.href
+  var theRequest = {}
+  if (url.indexOf('?') !== -1) {
+    let str = url.substr(url.indexOf('?') + 1)
+    if (str.indexOf('&') !== -1) {
+      let strs = str.split('&')
+      for (let i = 0; i < strs.length; i++) {
+        theRequest[strs[i].split('=')[0]] = strs[i].split('=')[1]
+      }
+    } else {
+      theRequest[str.split('=')[0]] = str.split('=')[1]
+    }
   }
+  return theRequest
 }
 
 export {
@@ -146,5 +181,6 @@ export {
   sortedIndex,
   shen,
   getDate,
-  get
+  get,
+  getRequests
 }
