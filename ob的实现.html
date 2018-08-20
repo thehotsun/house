@@ -1,0 +1,144 @@
+<!-- <script type="text/javascript">
+	class Observer {
+		constructor (data) {
+			this.bl(data);
+		}
+		bl (data) {
+			Object.keys(data).forEach((key) => {
+				difineReactive(data, key, data[key]);
+			})
+		}
+	}	
+	function difineReactive (obj, key, value) {
+		let dep = new Dep();
+		Object.defineProperty(obj, key, {
+			enumerable: true,
+			configurable: true,
+			get: function () {
+				dep.push(Dep.target);
+				return value
+			},
+			set: function (value) {
+				dep.notify();
+				observer(value)
+			}
+		})
+	}
+	function observer (data) {
+		return new Observer(data);
+	}
+	class Dep {
+		constructor () {
+			this.subs = [];
+		}
+		push () {
+			this.subs.push(Dep.target);
+		}
+		notify () {
+			for(let i in this.subs){
+				this.subs[i].fn();
+			}
+		}
+	}
+
+	Dep.target = null;
+	function pushTarget (watch) {
+		Dep.target = watch;
+	}
+
+	class Watch {
+		constructor (exp, fn) {
+			this.fn = fn;
+			this.exp = exp;
+			pushTarget(this);
+			data[exp];
+		}
+	}
+	var data = {
+		a: 1,
+		b: {
+			c: 2
+		}
+	}
+	observer(data);
+
+	new Watch("a", () => console.log(data.a));
+	 setTimeout( () => data.a = 3 ,2000)
+</script> -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		div{
+			background: url(puhuo2.jpg);
+		}
+	</style>
+</head>
+<body>
+	<div></div>
+</body>
+</html>
+ <script type="text/javascript">
+ let target = null;
+ function ll(data, key, value) {
+ 		const dep = new Dep();
+ 				Object.defineProperty(data, key,{
+ 					enumerable : true,
+ 					configurable : true,
+ 					get: function () {
+ 						dep.push();
+ 						return value;
+ 					},
+ 					set:  function (newvalue) {
+ 						value = newvalue;
+ 						dep.ll();
+ 					}
+ 				})
+
+ 			}
+ 
+ 	class Ob {
+ 		constructor (data) {
+ 			this.wl(data);
+ 		}
+ 		wl (data) {
+ 			Object.keys(data).forEach((key) =>{
+ 				ll(data, key, data[key]);	
+ 			})
+ 		}
+ 	}
+ 	 class Dep {
+ 	 	constructor () {
+ 	 		this.subs = [];
+ 	 	}
+ 	 	push () {
+ 	 		this.subs.push(target);
+ 	 	}
+ 	 	ll () {
+ 	 		for(let i in this.subs){
+ 	 			this.subs[i].fn();
+ 	 		}
+ 	 	}
+ 	 }
+ 	  class Watch{
+ 	  	constructor (ex, fn) {
+ 	  		this.ex = ex;
+ 	  		this.fn  = fn;
+ 	  		target = this;
+ 	  		a["_" + ex];
+ 	  	}
+ 	  }
+ 	  var a = {
+ 	  	a:null,
+ 	  	_a: 2,
+ 	  	_b :{
+ 	  		c:3
+ 	  	}
+ 	  }
+ 	   new Ob(a);
+ 	  setTimeout( () => a._a = 3 ,1000);
+ 	  new Watch ("a" ,function(){
+ 	  	console.log(a.a);
+ 	  })
+ </script>

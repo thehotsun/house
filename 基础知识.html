@@ -1,0 +1,298 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+</head>
+<style type="text/css">
+</style>
+<body>
+<div></div>
+</body>
+</html>
+<script type="text/javascript">
+
+
+var a = {
+	s: 2,
+	d: function kk () {
+		console.log(s)
+	},
+	b: 2
+}
+kk()
+a.d()
+/*
+
+改变数组长度会有什么结果
+
+// 在改变数组的长度后，for in 循环不能够获取多出来的undefined值得索引，因此只能循环到原来真正的值，而且多出来的值是在原数组的后面添加的
+var c = [1,2]
+c.length = 5;
+console.log(c.length)
+console.log(c)
+for(i = 0; i<c.length ; i++){
+	console.log( i + ":" +c[i])
+}
+for( j in c){
+	console.log( j + ":" +c[j])
+}
+for( x of c){
+	console.log( x)
+}
+/*
+
+// map()方法的使用和forEach()方法差不多，只不过返回的是整个经过回调函数处理后的数组
+
+
+*/
+
+/*
+
+// 关于元素高度宽度等属性的获取
+
+可见区域高：offsetHeight // 只有这个属性的高度是加上border的数值的
+可见区域高：clientHeight 
+正文全文高：scrollHeight
+// 下面两个属性获取的值是一样的
+ 
+ // 以上所有获取的方法都是标准盒模型 即 内容高度加上padding高度
+
+*/
+
+/*
+
+// 如何通过js获取dom外部引入的css值
+
+	var a = document.getElementsByTagName("div")[0];
+	console.log(a);
+	var b = getComputedStyle(a,null).padding; // ie则使用a.currentStyle.padding
+	// 注意，ie里面的是dom元素的方法，而非ie则是window的方法
+	console.log(b);
+
+ // 官方文档
+
+	let style = window.getComputedStyle(element, [pseudoElt]);
+	element
+	用于获取计算样式的Element
+	pseudoElt 可选
+	指定一个要匹配的伪元素的字符串。必须对普通元素省略（或null）
+
+*/
+
+/*
+
+// 函数声明以及函数表达式之间的区别
+ 
+ 在ECMAScript中，创建函数的最常用的两个方法是函数表达式和函数声明，两者期间的区别是有点晕，因为ECMA规范只明确了一点：函数声明必须带有标示符（Identifier）（就是大家常说的函数名称），而函数表达式则可以省略这个标示符：
+
+　　函数声明:
+
+　　function 函数名称 (参数：可选){ 函数体 }
+
+　　函数表达式：
+
+　　function 函数名称（可选）(参数：可选){ 函数体 }
+
+所以，可以看出，如果不声明函数名称，它肯定是表达式，可如果声明了函数名称的话，如何判断是函数声明还是函数表达式呢？ECMAScript是通过上下文来区分的，如果function foo(){}是作为赋值表达式的一部分的话，那它就是一个函数表达式，如果function foo(){}被包含在一个函数体内，或者位于程序的最顶部的话，那它就是一个函数声明。
+
+
+
+
+// 如此例
+
+  var f = function foo(){
+    return  foo; // foo是在内部作用域内有效
+  };
+  // foo在外部用于是不可见的 也就是说foo这个变量只存在于此函数块的作用域内
+  console.log(typeof foo); // "undefined"
+  f(); // "function"
+  var j = f(); // 此时 打印j 会得到
+									  function foo(){
+									    return  foo; // foo是在内部作用域内有效
+									  }
+  
+  也就是说里面的变量foo为此函数本身
+
+
+*/
+
+
+
+/*
+
+// 在css中引入在线的样式库，示例如下
+@import url("http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.css");
+
+后面的分号时必须的
+
+*/
+
+/*
+
+
+// 移动端的样式问题
+
+1、在ios下，最后一个元素的margin是不起作用的，通常使用添加一个空的div来达到此效果
+2、background样式头尽量写全，如 background-size、background-iamge、background-repeat、background-position等
+
+
+*/
+
+/*
+
+// vue中main.js一般引入vue、vuex、vue-router、axios、store以及可能使用的各种css库
+
+// vue中如何引入vuex以及vue-router？
+
+// 一般通过 npm install vuex --save-dev安装，然后通过import vuex from ‘vuex’ 来引入使用。vue-router同理
+但是在引入这些模块时，要使用 vue.use(vuex或者vue-router)来进行全局注册
+ 
+
+ // axios是特殊的，它通过npm install axios --save-dev安装，通过import axios from 'axios'引入，通过Vue.prototype.$http = axios来使用
+*/
+
+
+/*
+
+// 如何在线引入iconfont
+
+// 先登录阿里巴巴的iconfont网站，然后将所需要的图标添加购物车，再生成一个项目，而后点击unicode生成在线链接，再点击font class 生成链接，将所有的url里面的链接都添加上http://，而后就可以通过控制class类名来添加图标了。例子如下
+
+
+<link rel="stylesheet" type="text/css" href="http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.css">
+    <style type="text/css">
+        @font-face {
+		  font-family: 'iconfont';  
+		  src: url('http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.eot');
+		  src: url('http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.eot?#iefix') format('embedded-opentype'),
+		  url('http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.woff') format('woff'),
+		  url('http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.ttf') format('truetype'),
+		  url('http://at.alicdn.com/t/font_409512_gn05ei534mvuc8fr.svg#iconfont') format('svg');
+		}
+		.iconfont{
+			font-size: 16px;
+			font-family: 'iconfont';
+			font-style:normal;
+	        -webkit-font-smoothing: antialiased;
+            webkit-text-stroke-width: 0.2px;
+            -moz-osx-font-smoothing: grayscale; 
+            padding-left:20px
+		}
+    </style>
+
+	 <i class="iconfont icon-more"></i>
+    */
+
+
+
+
+
+//关于变量声明提升
+
+/*function a(arg){
+	console.log(a); //输出function a
+	var a = "a";
+	function a(){
+		console.log("1");F
+	}
+	console.log(a); 输出字符串 “a”
+	//a(); 报错，因为此时a已经是一个string“a”
+}
+a(2);
+var a = 9.22;
+ 
+因为存在变量声明提升，且js中函数名与变量名共同使用一个标识符，又因为函数声明的优先级比变量声明的优先级高，因此上面的代码可以这么理解
+function a(arg){
+	function a () {}
+	var a ;
+	console.log(a);
+	a = "a";
+	console.log(a);
+	//a(); 报错
+}
+
+*/ 
+
+/*
+ //关于 | 和 || 操作符
+
+
+console.log("ss" | "wewe"); // 0
+console.log( true | false); // 1
+console.log("ss" || "pp"); // "ss"
+console.log( typeof( 1 || "ss" )); // number 判断的结果为1
+console.log( typeof( "ss" || 1 )); // string
+console.log( typeof( "ss" | 1 )); // number  判断的结果为1
+console.log( "ss" | 1 ); // number  判断的结果为1
+console.log( typeof( false | "true" )); // number 判断的结果为0
+console.log( false | "2" ); //  判断的结果为2
+console.log( typeof( false || "true" )); // string
+console.log( false | "false" ); // 0 
+console.log( "111" | "1" ); // 111
+console.log( typeof("111" | "1") ); // number
+console.log( typeof("ss" | "11") ); // number
+console.log( "ss" | "11" ); // 11
+console.log(  false | "2232jkj"); // 0
+
+// 综上所述， || 的时候执行正常的或操作， | 的时候也会执行或操作，但是输出不同，此操作会尝试将两端的都转化为number，而后进行判断，如果作左边的能够转为数字，则输出此数字 如 true转化为1；右侧同左侧相同；如果两边都不能转为数字则输出数字 0 */
+
+// localStorage 和 sessionStorage 方法的使用
+// 协议、   域名、 端口 (http默认端口为80 https默认端口号443)
+// http://baidu.com:80
+
+
+// 关于localStorage的使用
+ 
+
+/*
+localStorage.setItem("l",[1,2,3]);
+localStorage.setItem("k",[3,2,1]);
+console.log(localStorage);
+localStorage.l = "string";
+console.log("localStorage.getItem(key):" +　localStorage.getItem("key"));
+console.log("localStorage.key:" + localStorage.key); // 这个和上面对比还是很有意思的
+console.log(localStorage);
+localStorage.removeItem("key"); // 不管是这个的remove还是数组字符串的remove，应该是先判断是否为本身的属性值然后才进行操作
+console.log(localStorage);
+console.log(localStorage.getItem("key"));
+//localStorage.clear();
+console.log(localStorage);
+console.log(localStorage.getItem("key"));
+console.log(localStorage.getItem("k"));
+
+
+// 由以上代码可知 该怎么用怎么用，不管通过什么方式设置的值，最后都会被覆盖，因此，不管是get还是直接点设置的值的内存地址都是一个，因此 localStorage.getItem（"s"） === localStorage.s
+*/
+
+/* 
+//字符串与数组方法
+
+var a = ["2102-23-43","2344-34-45","2002-23-43"]
+function arr(date) {
+	var a = [];
+	for(let i in date){
+		a[i] = date[i].split("-");//转化为数组并返回这个数组 split参数为“”时，将每一个字符都转为为一个数组元素，如果为空，将整个字符串转为一个数组元素。如果参数中的字符存在于被转化的字符串中，则以此参数字符为切割点，将字符串转化为一个或者多个数组元素
+		a[i] = a[i][0] +　a[i][1] + a[i][2];
+	}
+	return a;
+}
+var d = arr(a);
+var b = arr(a).sort();
+var c = [];
+for( let i of b ) {
+	i = i + "";
+	i = i.split(""); //转化为数组并返回这个数组 split参数为“”时，将每一个字符都转为为一个数组元素，如果为空，将整个字符串转为一个数组元素。
+	console.log(i);
+	i.splice(4,0,"-").splice(7,0,"-") // 直接操作数组并不会返回这个数组
+	i = i.join(""); //转化为字符串并返回这个字符串 join方法参数为“”时，直接将所有数组拼接在一起，如果为空，将数组元素以及后面的逗号拼接在一起，如果参数为任意字符，则将每个数组元素后面添加此字符
+	c.push(i);
+}
+c.reverse(); //数组反转
+console.log(c);
+*/
+</script>

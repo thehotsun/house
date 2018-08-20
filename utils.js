@@ -148,6 +148,25 @@ function getDate(date, next = true, skip = true) {
 }
 
 /**
+ * 获取准确时间
+ */
+function getDate() {
+  let oDate = new Date()
+  let year = oDate.getFullYear()
+  let month =
+    oDate.getMonth() + 1 < 10
+      ? '0' + (oDate.getMonth() + 1)
+      : oDate.getMonth() + 1
+  let date = oDate.getDate() < 10 ? '0' + oDate.getDate() : oDate.getDate()
+  let hour = oDate.getHours() < 10 ? '0' + oDate.getHours() : oDate.getHours()
+  let minute =
+    oDate.getMinutes() < 10 ? '0' + oDate.getMinutes() : oDate.getMinutes()
+  let sec =
+    oDate.getSeconds() < 10 ? '0' + oDate.getSeconds() : oDate.getSeconds()
+  return year + '' + month + date + hour + minute + sec
+}
+
+/**
  * 获取查询参数
  * @return {Object}
  * @example
