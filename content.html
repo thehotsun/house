@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style type="text/css">
+p.one
+{
+position:fixed;
+}
+p.two
+{
+position:fixed;
+top:30px;
+right:5px;
+}
+.q{
+  width: 200px;
+  /*position: relative;*/
+  background-color: red;
+/*  overflow-x:auto;
+  overflow-y:auto;*/
+  margin-top: 20px;
+  padding-top: 20px;
+  /*height: 500px;*/
+}
+#qq{
+  /*transform:translate3d(0,0,0)*/
+
+}
+.e{
+  width: 190px;
+  height: 2000px;
+  background-color: pink;
+  font-size: 800px;
+}
+.w{
+  position: fixed;
+  /*top: 20px;*/
+
+}
+.o{
+  background-color: yellow;
+  
+  width:10px;
+  height: 20px;
+
+}
+</style>
+</head>
+<body>
+<div class="oo">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+</div>
+<div id="qq" style="transform: translate3d(0,0,0);">
+<div>
+  <div class="q">
+    <div class="w">
+      <div class="o">2</div>
+      <div class="o">2</div>
+      <div class="o">2</div>
+    </div>
+    <div class="e">
+
+    </div>
+    
+  </div>
+
+</div>
+<!--   
+<p class="one">一些文本。</p>
+<p class="two">更多的文本。</p> -->
+</div>
+
+  <script type="text/html" id="ww">
+     <%for ( var i = 0; i < users.length; i++ ) { %>
+        <li>
+            <a href='<%=users[i].url%>'>
+                <%=users[i].name%>
+            </a>
+        </li>
+    <%}%>
+  </script>
+</body>
+<script type="text/javascript">
+
+
+class A {
+  constructor () {
+
+  }
+  jj () {
+    console.log(this)
+  }
+  static kk () {
+    console.log(this.prototype)
+  }
+}
+var opop = new  A();
+opop.jj()
+A.kk()
+console.log(A.__proto__ === Function.prototype)
+
+
+
+
+var ll = [1]
+function ii () {
+  return ll.push(1)
+}
+console.log(ii())
+
+/**
+ * Promise 实现 遵循promise/A+规范
+ * Promise/A+规范译文:
+ * https://malcolmyu.github.io/2015/06/12/Promises-A-Plus/#note-4
+ */
+
+// promise 三个状态
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
+
+function Promise(excutor) {
+    let that = this; // 缓存当前promise实例对象
+    that.status = PENDING; // 初始状态
+    that.value = undefined; // fulfilled状态时 返回的信息
+    that.reason = undefined; // rejected状态时 拒绝的原因
+    that.onFulfilledCallbacks = []; // 存储fulfilled状态对应的onFulfilled函数
+    that.onRejectedCallbacks = []; // 存储rejected状态对应的onRejected函数
+
+    function resolve(value) { // value成功态时接收的终值
+        if(value instanceof Promise) {
+            return value.then(resolve, reject);
+        }
+        setTimeout(() => {
+            // 调用resolve 回调对应onFulfilled函数
+            if (that.status === PENDING) {
+                // 只能由pedning状态 => fulfilled状态 (避免调用多次resolve reject)
+                that.status = FULFILLED;
+                that.value = value;
+                that.onFulfilledCallbacks.forEach(cb => cb(that.value));
+            }
+        });
+    }
+
+    function reject(reason) { // reason失败态时接收的拒因
+        setTimeout(() => {
+            // 调用reject 回调对应onRejected函数
+            if (that.status === PENDING) {
+                // 只能由pedning状态 => rejected状态 (避免调用多次resolve reject)
+                that.status = REJECTED;
+                that.reason = reason;
+                that.onRejectedCallbacks.forEach(cb => cb(that.reason));
+            }
+        });
+    }
+
+    // 捕获在excutor执行器中抛出的异常
+    // new Promise((resolve, reject) => {
+    //     throw new Error('error in excutor')
+    // })
+    try {
+        excutor(resolve, reject);
+    } catch (e) {
+        reject(e);
+    }
+}
+
+/**
+ * resolve中的值几种情况：
+ * 1.普通值
+ * 2.promise对象
+ * 3.thenable对象/函数
+ */
+
+/**
+ * 对resolve 进行改造增强 针对resolve中不同值情况 进行处理
+ * @param  {promise} promise2 promise1.then方法返回的新的promise对象
+ * @param  {[type]} x         promise1中onFulfilled的返回值
+ * @param  {[type]} resolve   promise2的resolve方法
+ * @param  {[type]} reject    promise2的reject方法
+ */
+function resolvePromise(promise2, x, resolve, reject) {
+    if (promise2 === x) {  // 如果从onFulfilled中返回的x 就是promise2 就会导致循环引用报错
+        return reject(new TypeError('循环引用'));
+    }
+
+    let called = false; // 避免多次调用
+    // 如果x是一个promise对象 （该判断和下面 判断是不是thenable对象重复 所以可有可无）
+    if (x instanceof Promise) { // 获得它的终值 继续resolve
+        if (x.status === PENDING) { // 如果为等待态需等待直至 x 被执行或拒绝 并解析y值
+            x.then(y => {
+                resolvePromise(promise2, y, resolve, reject);
+            }, reason => {
+                reject(reason);
+            });
+        } else { // 如果 x 已经处于执行态/拒绝态(值已经被解析为普通值)，用相同的值执行传递下去 promise
+            x.then(resolve, reject);
+        }
+        // 如果 x 为对象或者函数
+    } else if (x != null && ((typeof x === 'object') || (typeof x === 'function'))) {
+        try { // 是否是thenable对象（具有then方法的对象/函数）
+            let then = x.then;
+            if (typeof then === 'function') {
+                then.call(x, y => {
+                    if(called) return;
+                    called = true;
+                    resolvePromise(promise2, y, resolve, reject);
+                }, reason => {
+                    if(called) return;
+                    called = true;
+                    reject(reason);
+                })
+            } else { // 说明是一个普通对象/函数
+                resolve(x);
+            }
+        } catch(e) {
+            if(called) return;
+            called = true;
+            reject(e);
+        }
+    } else {
+        resolve(x);
+    }
+}
+
+/**
+ * [注册fulfilled状态/rejected状态对应的回调函数]
+ * @param  {function} onFulfilled fulfilled状态时 执行的函数
+ * @param  {function} onRejected  rejected状态时 执行的函数
+ * @return {function} newPromsie  返回一个新的promise对象
+ */
+Promise.prototype.then = function(onFulfilled, onRejected) {
+    const that = this;
+    let newPromise;
+    // 处理参数默认值 保证参数后续能够继续执行
+    onFulfilled =
+        typeof onFulfilled === "function" ? onFulfilled : value => value;
+    onRejected =
+        typeof onRejected === "function" ? onRejected : reason => {
+            throw reason;
+        };
+
+    if (that.status === FULFILLED) { // 成功态
+        return newPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                try{
+                    let x = onFulfilled(that.value);
+                    resolvePromise(newPromise, x, resolve, reject); // 新的promise resolve 上一个onFulfilled的返回值
+                } catch(e) {
+                    reject(e); // 捕获前面onFulfilled中抛出的异常 then(onFulfilled, onRejected);
+                }
+            });
+        })
+    }
+
+    if (that.status === REJECTED) { // 失败态
+        return newPromise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                try {
+                    let x = onRejected(that.reason);
+                    resolvePromise(newPromise, x, resolve, reject);
+                } catch(e) {
+                    reject(e);
+                }
+            });
+        });
+    }
+
+    if (that.status === PENDING) { // 等待态
+        // 当异步调用resolve/rejected时 将onFulfilled/onRejected收集暂存到集合中
+        return newPromise = new Promise((resolve, reject) => {
+            that.onFulfilledCallbacks.push((value) => {
+                try {
+                    let x = onFulfilled(value);
+                    resolvePromise(newPromise, x, resolve, reject);
+                } catch(e) {
+                    reject(e);
+                }
+            });
+            that.onRejectedCallbacks.push((reason) => {
+                try {
+                    let x = onRejected(reason);
+                    resolvePromise(newPromise, x, resolve, reject);
+                } catch(e) {
+                    reject(e);
+                }
+            });
+        });
+    }
+};
+
+/**
+ * Promise.all Promise进行并行处理
+ * 参数: promise对象组成的数组作为参数
+ * 返回值: 返回一个Promise实例
+ * 当这个数组里的所有promise对象全部变为resolve状态的时候，才会resolve。
+ */
+Promise.all = function(promises) {
+    return new Promise((resolve, reject) => {
+        let done = gen(promises.length, resolve);
+        promises.forEach((promise, index) => {
+            promise.then((value) => {
+                done(index, value)
+            }, reject)
+        })
+    })
+}
+
+function gen(length, resolve) {
+    let count = 0;
+    let values = [];
+    return function(i, value) {
+        values[i] = value;
+        if (++count === length) {
+            console.log(values);
+            resolve(values);
+        }
+    }
+}
+
+/**
+ * Promise.race
+ * 参数: 接收 promise对象组成的数组作为参数
+ * 返回值: 返回一个Promise实例
+ * 只要有一个promise对象进入 FulFilled 或者 Rejected 状态的话，就会继续进行后面的处理(取决于哪一个更快)
+ */
+Promise.race = function(promises) {
+    return new Promise((resolve, reject) => {
+        promises.forEach((promise, index) => {
+           promise.then(resolve, reject);
+        });
+    });
+}
+
+// 用于promise方法链时 捕获前面onFulfilled/onRejected抛出的异常
+Promise.prototype.catch = function(onRejected) {
+    return this.then(null, onRejected);
+}
+
+Promise.resolve = function (value) {
+    return new Promise(resolve => {
+        resolve(value);
+    });
+}
+
+Promise.reject = function (reason) {
+    return new Promise((resolve, reject) => {
+        reject(reason);
+    });
+}
+
+/**
+ * 基于Promise实现Deferred的
+ * Deferred和Promise的关系
+ * - Deferred 拥有 Promise
+ * - Deferred 具备对 Promise的状态进行操作的特权方法（resolve reject）
+ *
+ *参考jQuery.Deferred
+ *url: http://api.jquery.com/category/deferred-object/
+ */
+Promise.deferred = function() { // 延迟对象
+    let defer = {};
+    defer.promise = new Promise((resolve, reject) => {
+        defer.resolve = resolve;
+        defer.reject = reject;
+    });
+    return defer;
+}
+
+/**
+ * Promise/A+规范测试
+ * npm i -g promises-aplus-tests
+ * promises-aplus-tests Promise.js
+ */
+
+try {
+  module.exports = Promise
+} catch (e) {
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 实现简易模板
+var str = document.getElementById('ww').innerHTML
+function temp (id, str) {
+  var users = [{url: 'https://www.baidu.com', name : 'xz'}, {url: 'https://www.baidu.com', name : 'xz'}, {url:'https://www.baidu.com', name : 'xz'}]
+  // 如果.replace(/[\r\t\n]/g, '')在最开始执行的时候str.replace(/<%=(.*)%>/gm, function(_, $1) {return '");arr.push(' + $1 + ');' + 'arr.push("'})中的 $1后面的 ');' 会丢失，不知为何
+  str = 'var arr = [];arr.push("' + str.replace(/<%=(.*)%>/gm, function(_, $1) {return '");arr.push(' + $1 + ');' + 'arr.push("'}).replace(/(%>$)/g, '').replace(/<%/gm, '");').replace(/%>/g, 'arr.push("').replace(/[\r\t\n]/g, '') + '"); return arr.join("")'
+  console.log(str);
+  var fn = new  Function('users',str)
+ 
+  document.getElementById(id).innerHTML =  fn(users)
+}
+// temp('qq', str)
+
+var str = 'qqaeqwe'
+var re = /\w/g;
+console.log(str.match(re))
+var a = 11;
+function test () {
+  var a = 12;
+  return function() {
+    console.log(a)
+  }
+}
+var jj = test()
+jj()
+console.log(typeof jj)
+var RE = /#{([^{}])+}/
+var re = /\\?\#{([^{}]+)\}/
+var str = '#{asdadfd}'
+console.log(str.replace(RE, function (tar){ console.log(tar);}));
+console.log(str.replace(re, function (tar){ console.log(tar);}));
+function bind(fn , ctx) {
+	return function (a) {
+		fn.apply(ctx ? ctx : null, arguments )
+	}
+}
+var klkl = bind(function(...a){console.log(...a);})
+klkl(1,2,3)
+var RE = /([as])/g
+var str = 'ajhbus'
+var kk = 'oooo'
+str = str.replace(RE, function(...rest){console.log(rest)})
+console.log(str);
+// 监测对象变化
+
+function monitor (obj, callback) {
+	var keys = Object.keys(obj)
+	keys.map((key, index, arr) => {
+		var oldvalue = obj[key]
+		Object.defineProperty(obj, key, {
+			get: function () {
+				return oldvalue
+			},
+			set: function (newvalue) {
+				callback.call(this, newvalue, oldvalue)
+			}
+		})
+		if ({}.toString.call(oldvalue) === '[object Object]') monitor(oldvalue, callback)
+	})
+}
+var callback = function(newVal, oldVal){
+    alert(newVal + '----' + oldVal);
+};
+
+// 定义一个普通对象作为数据模型
+var data = {
+    a: 200,
+    level1: {
+        b: 'str',
+        c: [1, 2, 3],
+        level2: {
+            d: 90
+        }
+    }
+}
+monitor(data, callback)
+
+// data.a = 240
+// data.level1.b = 'sss';
+// data.level1.level2.d = 'msn';
+
+//  快速排序和插入排序
+// 插入排序(顺带去重)
+// 我的版本
+function cp (arr) {
+	for (var i = 1; i < arr.length; i++) {
+		let equal = false
+		var target = arr[i]
+		var index = undefined
+		for (var j = i - 1; j >= 0; j--) {
+				if (target < arr[j]) {
+					index = j
+				}else if (target === arr[j]) {
+					arr.splice(i, 1)
+					equal = true
+					i--
+					break
+				}
+		}
+		if (equal) continue
+		if (index !== undefined) {
+			arr.splice(index, 0, arr[i])
+			arr.splice(i + 1, 1)
+		}
+	}
+	return arr
+}
+
+console.log(cp([1,4,6,72,4,67,8,99,44,4,67,5]));
+
+// 文章的版本
+function insertionSort(arr) {
+    for (var i = 1; i < arr.length; i++) {
+        var element = arr[i];
+        for (var j = i - 1; j >= 0; j--) {
+            var tmp = arr[j];
+            var order = tmp - element;
+            if (order > 0) {
+                arr[j + 1] = tmp;
+            } else {
+                break;
+            }
+        }
+        arr[j + 1] = element;
+    }
+    return arr
+}
+console.log(cp([2,3,56,1,45,5,8,23,99]));
+
+// 快速排序
+
+// 我的版本
+function kp (arr) {
+	console.log(arr);
+	if (arr.length <= 1) return arr
+	let value = arr[0]
+	let target = 1
+	let left = []
+	let right = []
+	for (let i = 1; i < arr.length; i++) {
+		if (arr[i] < value) {
+			left.push(arr[i])
+		} else {
+			right.push(arr[i])
+		}
+	}
+	arr.splice(0, 1)
+	return kp(left).concat(value, kp(right))
+}
+
+function inSpace (arr, to = arr.length) {
+	if (to <= 1) return arr
+	let value = arr[0]
+	let index = 1
+	for (let i = 1; i < to; i++) {
+		if (arr[i] < value) {
+			[arr[i], arr[index++]] = [arr[index], arr[i]]
+		}
+	}
+	[arr[0], arr[index -1]] = [arr[index -1], arr[0]];
+	return [].concat(inSpace(arr.slice(0, index - 1)), value, inSpace(arr.slice(index)))
+}
+console.log(inSpace([1,45,56,3,4]));
+// 文章版本
+function quickSort(arr) {
+    // 交换元素
+    function swap(arr, a, b) {
+        var temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+
+    function partition(arr, left, right) {
+        var pivot = arr[left];
+        var storeIndex = left;
+
+        for (var i = left + 1; i <= right; i++) {
+            if (arr[i] < pivot) {
+                swap(arr, ++storeIndex, i);
+            }
+        }
+
+        swap(arr, left, storeIndex);
+
+        return storeIndex;
+    }
+
+    function sort(arr, left, right) {
+        if (left < right) {
+            var storeIndex = partition(arr, left, right);
+            sort(arr, left, storeIndex - 1);
+            sort(arr, storeIndex + 1, right);
+        }
+    }
+
+    sort(arr, 0, arr.length - 1);
+
+    return arr;
+}
+
+/*
+
+寻找obj在arr中应有的下标
+
+arr type：Array
+obj type：number
+
+sortedIndex([1,3,4,6,7], 5) 返回的值为5在arr中应该占有的下标位置即3
+
+ */
+function sortedIndex(arr, obj) {
+
+    var low = 0, high = arr.length;
+
+		while (high - 1 !== low) {
+			let mid = Math.floor((high + low) / 2)
+			if (obj > arr[mid]) low = mid
+			else high = mid
+		}
+
+    return high;
+};
+c = sortedIndex([0,1,2,3,4,5], 3)
+// console.log(c);
+
+
+// 柯力化
+
+function d (a, b, c, d, e) {
+	var sum = a + b + c + d + e
+	console.log(a, b, c,d,e, sum)
+}
+// var dd = curry1(d)
+// dd(1)(2)(3)(5)(6)
+// dd(1,2)(3,5)(6)
+var slice = Array.prototype.slice
+function zx(fn) {
+	var args = slice.call(arguments, 1)[0]
+	return function () {
+		let param = slice.call(arguments).concat(args)
+		return fn.apply(this, args.concat(slice.call(arguments)))
+	}
+}
+
+function curry1(fn , length) {
+	var l = length ? length : fn.length
+	return function () {
+		let param = slice.call(arguments)
+		if (arguments.length < l) {
+			return curry1(zx.call(this, fn, param), l - arguments.length)
+		} else {
+			fn.apply(this, param)
+		}
+	}
+}
+
+function sub_curry(fn) {
+    var args = [].slice.call(arguments, 1);
+    return function() {
+			console.log(args, arguments)
+        return fn.apply(this, args.concat([].slice.call(arguments)));
+    };
+}
+
+function curry(fn, length) {
+
+    length = length || fn.length;
+
+    var slice = Array.prototype.slice;
+
+    return function() {
+        if (arguments.length < length) {
+            var combined = [fn].concat(slice.call(arguments));
+            return curry(sub_curry.apply(this, combined), length - arguments.length);
+        } else {
+            return fn.apply(this, arguments);
+        }
+    };
+}
+var dd = curry(d)
+dd(1)(2)(3)(5)(6)
+dd(1,2)(3,5)(6)
+var tt = curry1(d)
+tt(1)(2)(3)(5)(6)
+tt(1,2)(3,5)(6)
+
+function compose(...funcs) {
+  if (funcs.length === 0) {
+    return arg => arg
+  }
+
+  if (funcs.length === 1) {
+    return funcs[0]
+  }
+
+  return funcs.reduce((a, b) => (...args) => a(b(...args)))
+}
+// console.log(fn("a", "b")("c"));
+</script>
+</html>
