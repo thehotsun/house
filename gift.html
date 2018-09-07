@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>gift</title>
+</head>
+<style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  dl,
+  dt,
+  dd,
+  ul,
+  ol,
+  li,
+  th,
+  td,
+  p,
+  blockquote,
+  pre,
+  form,
+  fieldset,
+  legend,
+  input,
+  button,
+  textarea,
+  article,
+  aside,
+  footer,
+  header,
+  hgroup,
+  nav,
+  section,
+  menu {
+    margin: 0;
+    padding: 0;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  em,
+  i {
+    font-style: normal;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  img {
+    border: 0;
+  }
+
+  input,
+  img {
+    vertical-align: middle;
+  }
+
+  article,
+  aside,
+  footer,
+  header,
+  hgroup,
+  nav,
+  section,
+  menu {
+    display: block;
+  }
+
+  a {
+    text-decoration: none!important;
+    color: #000;
+  }
+
+  .clearfix:after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+
+  html,
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    color: #666666;
+  }
+
+  a,
+  input,
+  textarea {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    tap-highlight-color: rgba(0, 0, 0, 0);
+    outline: none;
+    -webkit-font-smoothing: antialiased
+  }
+</style>
+<style>
+  .bg {
+    width: 100%;
+    height: 100%;
+    background-attachment: fixed;
+    background: url("https://up.enterdesk.com/edpic_360_360/38/f7/ee/38f7eed6eb88f7f06aebe0d12db31711.jpg") no-repeat 100% 100% / cover;
+  }
+
+  .bg2 {
+    background-image: url()
+  }
+
+  .fill {
+
+    padding-top: 100px;
+  }
+
+  .none {
+    display: none !important;
+  }
+
+  .hidden {
+    visibility: hidden !important;
+  }
+
+  .select {
+    margin: 0 100px;
+    border-radius: 5px;
+    line-height: 30px;
+    height: 30px;
+    text-align: center;
+    font-family: cursive;
+    font-size: 20px;
+    color: darkkhaki;
+    border: 1px solid darkkhaki;
+  }
+
+  .select1 {}
+
+  .select2 {
+    margin-top: 375px;
+
+  }
+
+  .header {
+    padding: 50px 80px;
+  }
+
+  .time {
+    /* width: 200px; */
+    border: 1px solid sandybrown;
+    height: 50px;
+    border-radius: 9px;
+    color: pink;
+    line-height: 50px;
+    text-align: center;
+    font-size: 25px;
+  }
+
+  .content {
+    padding-top: 20px;
+  }
+
+  .childDiv {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    width: 20%;
+    color: yellow;
+    border-radius: 8PX;
+    box-sizing: border-box;
+    border: 1px solid sandybrown;
+    display: inline-block;
+  }
+
+  .end {
+    height: 100%;
+    line-height: 100%;
+    font-size: 30px;
+    color: orange;
+    text-align: center;
+    padding: 120px 40px;
+  }
+
+  .loop {
+    background-color: #a6b1d1;
+    width: 250px;
+    height: 50px;
+    line-height: 50px;
+    color: #0047fc;
+    font-size: 18px;
+    margin-top: 290px;
+    border: none;
+    border-radius: 5px;
+  }
+</style>
+
+<body>
+  <div class="bg">
+    <div class="start">
+      <div class="fill"></div>
+      <div class="select select1">
+        1 to 50
+      </div>
+      <div class="select select2">
+        1 to 100
+      </div>
+    </div>
+    <div class="run">
+      <div class="header">
+        <div class="time"></div>
+
+      </div>
+      <div class="content">
+        <div class="content1"></div>
+        <div class="content2"></div>
+      </div>
+    </div>
+    <div class="end">
+      <div class="text">
+      </div>
+      <button class="loop">点击此处重新开始</button>
+    </div>
+  </div>
+  <!-- <img src="https://pic.ibaotu.com/00/56/90/66D888piCbq7.jpg-0.jpg!w340" alt=""> -->
+</body>
+<script>
+  var width, height
+  width = document.documentElement.clientWidth
+  height = document.documentElement.clientHeight
+  var bg = getEle('.bg')
+  var one = getEle('.select1')
+  var two = getEle('.select2')
+  var start = getEle('.start')
+  var run = getEle('.run')
+  var end = getEle('.end')
+  var time = getEle('.time')
+  var content = getEle('.content')
+  var content1 = getEle('.content1')
+  var content2 = getEle('.content2')
+  var text = getEle('.text')
+  var loop = getEle('.loop')
+  var interval
+  var oneortwo
+  bg.style.width = width + 'px'
+  bg.style.height = height + 'px'
+
+  function getEle(name) {
+    return document.querySelector(name)
+  }
+  function addEvent(el, event, fn) {
+    el.addEventListener(event, fn)
+  }
+  function hasClass(el, name) {
+    return el.className.search(' ' + name) === -1 ? false : true
+  }
+  function addClass(el, name) {
+    if (hasClass(el, name)) return
+    el.className += ' ' + name
+  }
+  function removeClass(el, name) {
+    if (!hasClass(el, name)) return
+    let reg = new RegExp(' ' + name)
+    el.className = el.className.replace(reg, '')
+  }
+  function show(num) {
+    switch (num) {
+      case 1:
+        removeClass(start, 'none')
+        addClass(run, 'none')
+        addClass(end, 'none')
+        break;
+      case 2:
+        addClass(start, 'none')
+        removeClass(run, 'none')
+        addClass(end, 'none')
+        break;
+      case 3:
+        addClass(start, 'none')
+        removeClass(end, 'none')
+        addClass(run, 'none')
+        break;
+      default:
+        break;
+    }
+  }
+  function setTime() {
+    let date = 0
+    time.innerHTML = date
+    return setInterval(() => {
+      date++
+      time.innerHTML = date
+    }, 1000)
+  }
+  function createDiv(num) {
+    let parnetDiv = document.createElement('div')
+    let arr = []
+    for (let i = num - 50; i < num; i++) {
+      arr.push(i + 1)
+    }
+    for (let i = num - 50; i < num; i++) {
+      let div = document.createElement('div')
+      let index = ~~(Math.random() * (num - i)) + 1
+      let value = arr.splice(index - 1, 1)
+      div.innerHTML = value
+      addClass(div, 'childDiv')
+      parnetDiv.appendChild(div)
+    }
+    if (num === 50) {
+      content1.appendChild(parnetDiv)
+
+    } else {
+      content2.appendChild(parnetDiv)
+
+    }
+  }
+  function startFn() {
+    show(1)
+  }
+  function runFn(select) {
+    return function () {
+      show(2)
+      interval = setTime()
+      if (select === 1) {
+        oneortwo = 1
+      } else {
+        oneortwo = 2
+      }
+      createDiv(50)
+    }
+  }
+  function endFn() {
+    show(3)
+    clearInterval(interval)
+    removeClass(content1, 'hidden')
+    addClass(content2, 'hidden')
+    content1.innerHTML = ''
+    content2.innerHTML = ''
+    text.innerHTML = '恭喜刘续同学获得了自己的新纪录 ' + time.innerHTML + ' 秒'
+  }
+  function hidden() {
+    let prev
+    return function (e) {
+
+      let num = +e.target.innerHTML
+      console.log(e.target, num, num === 1);
+      if (num === 1 || num === prev + 1) {
+        addClass(e.target, 'hidden')
+        prev = num
+
+      }
+      if (oneortwo === 1 && num === 50) {
+        endFn()
+      } else if (oneortwo === 2 && num === 100) {
+        endFn()
+      } else if (oneortwo === 2 && num === 50) {
+        addClass(content1, 'none')
+        createDiv(100)
+      }
+    }
+
+  }
+  addEvent(one, 'click', runFn(1))
+  addEvent(two, 'click', runFn(2))
+  addEvent(content, 'click', hidden())
+  addEvent(loop, 'click', startFn)
+  // addEvent(time, 'click', () => {
+  //   endFn()
+  // })
+  startFn()
+</script>
+
+</html>
