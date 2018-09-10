@@ -353,6 +353,7 @@
     return function (e) {
 
       let num = +e.target.innerHTML
+      if (isNaN(num) || typeof num !== 'number') return
       console.log(e.target, num, num === 1);
       if (num === 1 || num === prev + 1) {
         addClass(e.target, 'hidden')
