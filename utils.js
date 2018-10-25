@@ -148,25 +148,6 @@ function getDate(date, next = true, skip = true) {
 }
 
 /**
- * 获取准确时间
- */
-function getDate() {
-  let oDate = new Date()
-  let year = oDate.getFullYear()
-  let month =
-    oDate.getMonth() + 1 < 10
-      ? '0' + (oDate.getMonth() + 1)
-      : oDate.getMonth() + 1
-  let date = oDate.getDate() < 10 ? '0' + oDate.getDate() : oDate.getDate()
-  let hour = oDate.getHours() < 10 ? '0' + oDate.getHours() : oDate.getHours()
-  let minute =
-    oDate.getMinutes() < 10 ? '0' + oDate.getMinutes() : oDate.getMinutes()
-  let sec =
-    oDate.getSeconds() < 10 ? '0' + oDate.getSeconds() : oDate.getSeconds()
-  return year + '' + month + date + hour + minute + sec
-}
-
-/**
  * 获取查询参数
  * @return {Object}
  * @example
@@ -193,6 +174,53 @@ function getRequests() {
   return theRequest
 }
 
+/**
+ * 传入据今天未知的天数，获取其中周一到周五的天数
+ * @params {number}
+ * @return number
+ */
+
+function getWorkDay(diff) {
+  let date = new Date()
+  let day = date.getDay()
+  let remainder = (diff - day) % 7
+  let work = ((diff - day - remainder) / 7) * 5
+  switch (remainder) {
+    case 1:
+    case 2:
+      break
+    default:
+      work += remainder - 2
+      break
+  }
+  switch (day) {
+    case 6:
+    case 0:
+      work += 5
+      break
+    default:
+      work += day
+      break
+  }
+  return work
+}
+
+/**
+ * 传入据今天未知的天数，获取其中周一到周五的天数
+ * @params {Array}
+ * [[], []]
+ *    分别代表开始时间（此时间是较大的那一个）和结束时间
+ *      其中又分别传入年、月、日
+ * @return number
+ */
+
+function getDiff(...params) {
+  let start = params[0]
+  let end = params[1]
+  let diff = +new Date(start.join('-')) - +new Date(end.join('-'))
+  return (diff / 1000 / 60 / 60 / 24).toFixed()
+}
+
 export {
   typeOf,
   quickSort,
@@ -201,5 +229,7 @@ export {
   shen,
   getDate,
   get,
-  getRequests
+  getRequests,
+  getWorkDay,
+  getDiff
 }
