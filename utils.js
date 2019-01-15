@@ -86,7 +86,7 @@ obj type: Object
 
  */
 
-function shen(obj) {
+function deepClone(obj) {
   let newObj = isAarray(obj) ? [] : {}
   for (let i in obj) {
     if (obj.hasOwnProperty(i)) {
@@ -226,7 +226,7 @@ export {
   quickSort,
   flatten,
   sortedIndex,
-  shen,
+  deepClone,
   getDate,
   get,
   getRequests,
