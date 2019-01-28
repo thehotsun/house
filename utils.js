@@ -57,6 +57,33 @@ function flatten(arr) {
   return arr
 }
 
+// 此方法适用于获取树结构中所有的元素 例如  下面数组可以获取包括根元素在内的所有相似对象
+// [
+//   {
+//     a: 1,
+//     b:2,
+//     items: [
+//       {a: 1, b: 2, items: []}
+//     ]
+//   }
+// ]
+// @params
+//    data: array。结构类似上面数组
+//    children： str。 存储子元素的字段名称
+//    emptyArr： array。将所有的对象都存储在此数组上
+function getChildArr(data, children, emptyArr) {
+  this.data = emptyArr
+  let vm = this
+  return () => {
+    if (!data || !data.length) return
+    data.map(item => {
+      if (item[children] && item[children].length) {
+        vm.data.push(item[children])
+        vm.getChildArr(item[children], children)
+      }
+    })
+  }
+}
 /*
 
 寻找obj在arr中应有的下标
@@ -87,15 +114,17 @@ obj type: Object
  */
 
 function deepClone(obj) {
-  let newObj = isAarray(obj) ? [] : {}
-  for (let i in obj) {
-    if (obj.hasOwnProperty(i)) {
-      newObj[i] = typeof obj[i] == 'object' ? shen(obj[i]) : obj[i]
+  if (typeof obj === 'object' && obj) {
+    let newObj = Array.isArray(obj) ? [] : {}
+    for (let i in obj) {
+      if (obj.hasOwnProperty(i)) {
+        newObj[i] = typeof obj[i] === 'object' ? this.deepClone(obj[i]) : obj[i]
+      }
     }
+    return newObj
   }
-  return newObj
+  return obj
 }
-
 /*
   
   接收一个日期参数， 返回当前日期的上一天或者下一天 
@@ -231,5 +260,6 @@ export {
   get,
   getRequests,
   getWorkDay,
-  getDiff
+  getDiff,
+  getChildArr
 }
